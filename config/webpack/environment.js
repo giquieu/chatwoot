@@ -6,8 +6,8 @@ const vue = require('./loaders/vue');
 environment.plugins.prepend('VueLoaderPlugin', new VueLoaderPlugin());
 environment.loaders.prepend('vue', vue);
 
-environment.loaders.append('opus', {
-  test: /encoderWorker\.min\.js$/,
+environment.loaders.append('lamejsencoder', {
+  test: /audiorecorderencoder\.js$/,
   loader: 'file-loader',
   options: {
     name: '[name].[ext]',

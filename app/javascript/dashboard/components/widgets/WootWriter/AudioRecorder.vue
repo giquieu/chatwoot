@@ -8,20 +8,20 @@
 import 'video.js/dist/video-js.css';
 import 'videojs-record/dist/css/videojs.record.css';
 
-import videojs from 'video.js';
-
 import inboxMixin from '../../../../shared/mixins/inboxMixin';
 import alertMixin from '../../../../shared/mixins/alertMixin';
 
-import Recorder from 'opus-recorder';
-import encoderWorker from 'opus-recorder/dist/encoderWorker.min';
+import videojs from 'video.js';
 
 import WaveSurfer from 'wavesurfer.js';
 import MicrophonePlugin from 'wavesurfer.js/dist/plugin/wavesurfer.microphone.js';
-import 'videojs-wavesurfer/dist/videojs.wavesurfer.js';
 
+import 'videojs-wavesurfer/dist/videojs.wavesurfer.js';
 import 'videojs-record/dist/videojs.record.js';
-import 'videojs-record/dist/plugins/videojs.record.opus-recorder.js';
+
+import 'videojs-record/dist/plugins/videojs.record.lamejs.js';
+import './audiorecorderencoder.js';
+
 import { format, addSeconds } from 'date-fns';
 
 WaveSurfer.microphone = MicrophonePlugin;
@@ -70,12 +70,11 @@ export default {
           record: {
             audio: true,
             video: false,
-            displayMilliseconds: false,
-            maxLength: 300,
-            audioEngine: 'opus-recorder',
-            audioWorkerURL: encoderWorker,
-            audioChannels: 1,
-            audioSampleRate: 48000,
+            maxLength: 20,
+            debug: true,
+            audioEngine: 'lamejs',
+            audioWorkerURL: '/packs/audiorecorderencoder.js',
+            audioSampleRate: 44100,
             audioBitRate: 128,
           },
         },
@@ -88,7 +87,6 @@ export default {
     },
   },
   mounted() {
-    window.Recorder = Recorder;
     this.fireProgressRecord(this.initialTimeDuration);
     this.player = videojs('#audio-wave', this.recorderOptions, () => {
       this.$nextTick(() => {
@@ -106,9 +104,6 @@ export default {
   beforeDestroy() {
     if (this.player) {
       this.player.dispose();
-    }
-    if (window.Recorder) {
-      window.Recorder = undefined;
     }
   },
   methods: {
