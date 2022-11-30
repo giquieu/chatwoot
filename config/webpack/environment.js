@@ -6,6 +6,14 @@ const vue = require('./loaders/vue');
 environment.plugins.prepend('VueLoaderPlugin', new VueLoaderPlugin());
 environment.loaders.prepend('vue', vue);
 
+environment.loaders.append('lamejs', {
+  test: /lame\.min\.js$/,
+  loader: 'file-loader',
+  options: {
+    name: '[name].[ext]',
+  },
+});
+
 environment.loaders.append('lamejsencoder', {
   test: /audiorecorderencoder\.js$/,
   loader: 'file-loader',

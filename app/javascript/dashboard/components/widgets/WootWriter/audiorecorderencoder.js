@@ -1,11 +1,9 @@
-const lamejs = require('lamejs');
-
 /**
  * Created by intelWorx on 27/10/2015.
  */
 (function() {
-  // eslint-disable-next-line no-console
-  console.log('MP3 Conversion worker Started.');
+  // eslint-disable-next-line no-undef
+  importScripts('/packs/lame.min.js');
 
   let mp3Encoder;
   let maxSamples = 1152;
@@ -23,25 +21,26 @@ const lamejs = require('lamejs');
 
   let init = function(prefConfig) {
     config = prefConfig || { debug: true };
+    // eslint-disable-next-line no-undef
     mp3Encoder = new lamejs.Mp3Encoder(
       1,
       config.sampleRate || 44100,
-      config.bitRate || 123
+      config.bitRate || 128
     );
     clearBuffer();
   };
 
   let floatTo16BitPCM = function floatTo16BitPCM(input, output) {
     // var offset = 0;
-    for (var i = 0; i < input.length; i++) {
-      var s = Math.max(-1, Math.min(1, input[i]));
+    for (let i = 0; i < input.length; i++) {
+      let s = Math.max(-1, Math.min(1, input[i]));
       output[i] = s < 0 ? s * 0x8000 : s * 0x7fff;
     }
   };
 
   let convertBuffer = function(arrayBuffer) {
-    var data = new Float32Array(arrayBuffer);
-    var out = new Int16Array(arrayBuffer.length);
+    let data = new Float32Array(arrayBuffer);
+    let out = new Int16Array(arrayBuffer.length);
     floatTo16BitPCM(data, out);
     return out;
   };
@@ -64,10 +63,6 @@ const lamejs = require('lamejs');
       cmd: 'end',
       buf: dataBuffer,
     });
-    if (config.debug) {
-      // eslint-disable-next-line no-console
-      console.log('Sending finished command');
-    }
     clearBuffer(); // free up memory
   };
 
@@ -89,4 +84,3 @@ const lamejs = require('lamejs');
     }
   };
 })();
-

@@ -19,6 +19,7 @@ import MicrophonePlugin from 'wavesurfer.js/dist/plugin/wavesurfer.microphone.js
 import 'videojs-wavesurfer/dist/videojs.wavesurfer.js';
 import 'videojs-record/dist/videojs.record.js';
 
+import 'lamejs/lame.min.js';
 import 'videojs-record/dist/plugins/videojs.record.lamejs.js';
 import './audiorecorderencoder.js';
 
@@ -75,7 +76,9 @@ export default {
             audioEngine: 'lamejs',
             audioWorkerURL: '/packs/audiorecorderencoder.js',
             audioSampleRate: 44100,
+            audioBufferSize: 4096,
             audioBitRate: 128,
+            audioChannels: 1,
           },
         },
       },
